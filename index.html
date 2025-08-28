@@ -4,19 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokedex</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="./style.css" />
     <script src="script.js" defer></script>
+    <script src="./scripts/template.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Pokedex</h1>
       <div>
-        <input type="text" placeholder="Search pokemon" />
-        <button>Button</button>
+        <input id="searchInput" type="text" placeholder="Pokemon suchen" />
+        <button id="searchBtn">Suchen</button>
       </div>
     </header>
     <main>
-      <section id="content"></section>
+      <section id="content">
+        <div class="pokemon-card"></div>
+      </section>
+      <button id="loadMoreBtn">Mehr Anzeigen</button>
     </main>
+    <footer>
+      <p>© 2025 Pokedex. Alle Rechte vorbehalten.</p>
+      <p>Made by Manfred Lindauer</p>
+    </footer>
   </body>
 </html>
