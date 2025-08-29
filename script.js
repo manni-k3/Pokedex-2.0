@@ -2,6 +2,7 @@ let allPokemon = [];
 let content = document.getElementById("content");
 let searchInput = document.getElementById("searchInput");
 let loadingIndicator = document.getElementById("loadingIndicator");
+let loadMoreBtn = document.getElementById("loadMoreBtn");
 let pokemonShown = 20;
 
 document.getElementById("searchInput").addEventListener("input", filterPokemon);
@@ -57,18 +58,28 @@ async function displayPokemon(pokemonList) {
 
 function createPokemonCard(pokemonData, pokemonDetails) {
   const card = document.createElement("div");
-  card.classList.add("card", "shadow-lg", "m-2");
-  card.textContent = pokemonData.name;
+  card.classList.add("card", "shadow-lg", "bg-custom", "card-rounded");
+
+  const cardBody = document.createElement("div");
+  cardBody.classList.add("p-2", "text-center");
+
+  const pokemonName = document.createElement("p");
+  pokemonName.classList.add("fw-bold");
+  pokemonName.textContent = pokemonData.name;
 
   const pokemonImage = document.createElement("img");
   pokemonImage.src = pokemonDetails.sprites.front_default;
   pokemonImage.alt = pokemonDetails.name;
+  pokemonImage.classList.add("img-fluid");
 
   const pokemonId = document.createElement("p");
+  pokemonId.classList.add("text-muted");
   pokemonId.textContent = pokemonDetails.id;
 
-  card.appendChild(pokemonId);
-  card.appendChild(pokemonImage);
+  cardBody.appendChild(pokemonImage);
+  cardBody.appendChild(pokemonName);
+  cardBody.appendChild(pokemonId);
+  card.appendChild(cardBody);
 
   return card;
 }
@@ -112,7 +123,9 @@ function filterPokemon() {
 function toggleLoading(show) {
   if (show) {
     loadingIndicator.classList.remove("hidden");
+    loadMoreBtn.classList.add("hidden");
   } else {
     loadingIndicator.classList.add("hidden");
+    loadMoreBtn.classList.remove("hidden");
   }
 }
