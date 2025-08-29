@@ -1,15 +1,17 @@
 let allPokemon = [];
-
-const content = document.getElementById("content");
-const searchInput = document.getElementById("searchInput");
-
-let currentOffset = 0;
+let content = document.getElementById("content");
+let searchInput = document.getElementById("searchInput");
+let loadingIndicator = document.getElementById("loadingIndicator");
+let pokemonShown = 20;
 
 document.getElementById("searchInput").addEventListener("input", filterPokemon);
 document.getElementById("searchBtn").addEventListener("click", searchPokemon);
 document.getElementById("loadMoreBtn").addEventListener("click", () => {
-  currentOffset += 20;
-  init();
+  toggleLoading(true);
+  content.innerHTML = "";
+  const nextPokemon = allPokemon.results.slice(pokemonShown, pokemonShown + 20);
+  displayPokemon(nextPokemon);
+  pokemonShown += 20;
 });
 
 async function renderPokemon(limit, offset) {
@@ -22,6 +24,7 @@ async function renderPokemon(limit, offset) {
 
 async function init() {
   content.innerHTML = "";
+  toggleLoading(true);
   allPokemon = await renderPokemon(151, 0);
   displayPokemon(allPokemon.results.slice(0, 20));
 }
@@ -36,16 +39,25 @@ async function fetchPokemon(searchTerm) {
 }
 
 async function displayPokemon(pokemonList) {
-  for (const pokemon of pokemonList) {
-    const pokemonDetails = await getPokemonDetails(pokemon.url);
-    const card = createPokemonCard(pokemon, pokemonDetails);
-    content.appendChild(card);
-  }
+  const pokemonUrlList = pokemonList.map((pokemon) => pokemon.url);
+  const promises = pokemonUrlList.map((url) => getPokemonDetails(url));
+  const pokemonDetails = await Promise.all(promises);
+
+  content.innerHTML = "";
+
+  pokemonDetails.forEach((details) => {
+    const card = createPokemonCard(details, details);
+    const column = document.createElement("div");
+    column.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3");
+    column.appendChild(card);
+    content.appendChild(column);
+  });
+  toggleLoading(false);
 }
 
 function createPokemonCard(pokemonData, pokemonDetails) {
   const card = document.createElement("div");
-  card.classList.add("pokemon-card");
+  card.classList.add("card", "shadow-lg", "m-2");
   card.textContent = pokemonData.name;
 
   const pokemonImage = document.createElement("img");
@@ -55,8 +67,8 @@ function createPokemonCard(pokemonData, pokemonDetails) {
   const pokemonId = document.createElement("p");
   pokemonId.textContent = pokemonDetails.id;
 
-  card.appendChild(pokemonImage);
   card.appendChild(pokemonId);
+  card.appendChild(pokemonImage);
 
   return card;
 }
@@ -64,30 +76,43 @@ function createPokemonCard(pokemonData, pokemonDetails) {
 async function getPokemonDetails(url) {
   const response = await fetch(url);
   const data = await response.json();
-
+  await new Promise((resolve) => setTimeout(resolve, 500));
   return data;
 }
 
 async function searchPokemon() {
+  toggleLoading(true);
   try {
     content.innerHTML = "";
     const searchTerm = searchInput.value.trim();
     const pokemonsearch = await fetchPokemon(searchTerm);
 
-    const card = createPokemonCard(pokemonsearch, pokemonsearch);
-    content.appendChild(card);
+    const foundPokemonList = [pokemonsearch];
+    await displayPokemon(foundPokemonList);
+
+    toggleLoading(false);
   } catch {
     document.getElementById(
       "content"
-    ).innerHTML = `<h2>Pokemon nicht gefunden</h2>`;
+    ).innerHTML = `<h2 class="text-white">Pokemon nicht gefunden</h2>`;
+    toggleLoading(false);
   }
 }
 
 function filterPokemon() {
+  toggleLoading(true);
   content.innerHTML = "";
   const searchTerm = searchInput.value.toLowerCase();
   const filteredPokemon = allPokemon.results.filter((pokemon) => {
     return pokemon.name.toLowerCase().includes(searchTerm);
   });
   displayPokemon(filteredPokemon);
+}
+
+function toggleLoading(show) {
+  if (show) {
+    loadingIndicator.classList.remove("hidden");
+  } else {
+    loadingIndicator.classList.add("hidden");
+  }
 }
