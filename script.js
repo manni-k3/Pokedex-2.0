@@ -62,7 +62,7 @@ async function fetchPokemonDetails(url) {
 }
 
 // ====================== DISPLAY ======================
-async function displayPokemon(pokemonList, reset = false) {
+async function displayPokemon(pokemonList, reset = true) {
   const fragment = document.createDocumentFragment();
 
   // Brauchen wir Details (URL-Objekte) oder sind Details schon da?
@@ -159,11 +159,12 @@ loadMoreBtn.addEventListener("click", loadMorePokemon);
 
 async function loadMorePokemon() {
   await withLoading(async () => {
-    const nextBatch = allPokemon.results.slice(pokemonShown, pokemonShown + 20);
+    pokemonShown += 20;
+
+    const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
 
     if (nextBatch.length > 0) {
-      await displayPokemon(nextBatch, false); // anhängen
-      pokemonShown += 20;
+      await displayPokemon(nextBatch, true);
     }
 
     if (pokemonShown >= allPokemon.results.length) {
