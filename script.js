@@ -1,131 +1,173 @@
 let allPokemon = [];
-let content = document.getElementById("content");
-let searchInput = document.getElementById("searchInput");
-let loadingIndicator = document.getElementById("loadingIndicator");
-let loadMoreBtn = document.getElementById("loadMoreBtn");
 let pokemonShown = 20;
 
-document.getElementById("searchInput").addEventListener("input", filterPokemon);
-document.getElementById("searchBtn").addEventListener("click", searchPokemon);
-document.getElementById("loadMoreBtn").addEventListener("click", () => {
-  toggleLoading(true);
-  content.innerHTML = "";
-  const nextPokemon = allPokemon.results.slice(pokemonShown, pokemonShown + 20);
-  displayPokemon(nextPokemon);
-  pokemonShown += 20;
-});
+const content = document.getElementById("content");
+const searchInput = document.getElementById("searchInput");
+const loadingIndicator = document.getElementById("loadingIndicator");
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+const mainArea = document.getElementById("mainArea");
 
-async function renderPokemon(limit, offset) {
-  const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
-  const response = await fetch(url);
-  const data = await response.json();
+// ====================== LOADING WRAPPER ======================
+// Zeigt NUR den Loader und versteckt #mainArea.
+// Stellt sicher, dass der Loader mindestens 2s sichtbar ist.
+async function withLoading(task) {
+  const start = Date.now();
+  loadingIndicator.classList.remove("d-none");
+  mainArea.classList.add("d-none");
 
-  return data;
+  try {
+    await task();
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<h2 class="text-white text-center">Etwas ist schiefgelaufen.</h2>`;
+  } finally {
+    const elapsed = Date.now() - start;
+    const remaining = Math.max(0, 2000 - elapsed); // mind. 2s
+    setTimeout(() => {
+      loadingIndicator.classList.add("d-none");
+      mainArea.classList.remove("d-none");
+    }, remaining);
+  }
 }
 
+// ====================== INIT ======================
 async function init() {
-  content.innerHTML = "";
-  toggleLoading(true);
-  allPokemon = await renderPokemon(151, 0);
-  displayPokemon(allPokemon.results.slice(0, 20));
+  await withLoading(async () => {
+    allPokemon = await fetchPokemonList(151, 0);
+    await displayPokemon(allPokemon.results.slice(0, pokemonShown), true);
+    loadMoreBtn.classList.remove("d-none");
+  });
 }
 init();
 
-async function fetchPokemon(searchTerm) {
-  const search = `https://pokeapi.co/api/v2/pokemon/${searchTerm}`;
-  const resp = await fetch(search);
-  const searchPkm = await resp.json();
-
-  return searchPkm;
+// ====================== FETCH FUNCTIONS ======================
+async function fetchPokemonList(limit, offset) {
+  const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Liste konnte nicht geladen werden");
+  return await response.json();
 }
 
-async function displayPokemon(pokemonList) {
-  const pokemonUrlList = pokemonList.map((pokemon) => pokemon.url);
-  const promises = pokemonUrlList.map((url) => getPokemonDetails(url));
-  const pokemonDetails = await Promise.all(promises);
+async function fetchPokemonByIdOrName(searchTerm) {
+  const url = `https://pokeapi.co/api/v2/pokemon/${searchTerm}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Pokemon not found");
+  return await response.json();
+}
 
-  content.innerHTML = "";
+async function fetchPokemonDetails(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Details konnten nicht geladen werden");
+  return await response.json();
+}
 
-  pokemonDetails.forEach((details) => {
-    const card = createPokemonCard(details, details);
+// ====================== DISPLAY ======================
+async function displayPokemon(pokemonList, reset = false) {
+  const fragment = document.createDocumentFragment();
+
+  // Brauchen wir Details (URL-Objekte) oder sind Details schon da?
+  const needsDetails = pokemonList[0] && pokemonList[0].url;
+  let detailsList = [];
+
+  if (needsDetails) {
+    const promises = pokemonList.map((p) => fetchPokemonDetails(p.url));
+    detailsList = await Promise.all(promises);
+  } else {
+    detailsList = pokemonList;
+  }
+
+  detailsList.forEach((pokemon) => {
+    const card = createPokemonCard(pokemon);
     const column = document.createElement("div");
     column.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3");
     column.appendChild(card);
-    content.appendChild(column);
+    fragment.appendChild(column);
   });
-  toggleLoading(false);
+
+  if (reset) content.innerHTML = "";
+  content.appendChild(fragment);
 }
 
-function createPokemonCard(pokemonData, pokemonDetails) {
+// ====================== CARD ======================
+function createPokemonCard(pokemon) {
   const card = document.createElement("div");
   card.classList.add("card", "shadow-lg", "bg-custom", "card-rounded");
 
-  const cardBody = document.createElement("div");
-  cardBody.classList.add("p-2", "text-center");
+  const body = document.createElement("div");
+  body.classList.add("p-2", "text-center");
 
-  const pokemonName = document.createElement("p");
-  pokemonName.classList.add("fw-bold");
-  pokemonName.textContent = pokemonData.name;
+  const name = document.createElement("p");
+  name.classList.add("fw-bold");
+  name.textContent = pokemon.name;
 
-  const pokemonImage = document.createElement("img");
-  pokemonImage.src = pokemonDetails.sprites.front_default;
-  pokemonImage.alt = pokemonDetails.name;
-  pokemonImage.classList.add("img-fluid");
+  const img = document.createElement("img");
+  img.src = pokemon.sprites.front_default;
+  img.alt = pokemon.name;
+  img.classList.add("img-fluid");
 
-  const pokemonId = document.createElement("p");
-  pokemonId.classList.add("text-muted");
-  pokemonId.textContent = pokemonDetails.id;
+  const id = document.createElement("p");
+  id.classList.add("text-muted");
+  id.textContent = `#${pokemon.id}`;
 
-  cardBody.appendChild(pokemonImage);
-  cardBody.appendChild(pokemonName);
-  cardBody.appendChild(pokemonId);
-  card.appendChild(cardBody);
+  body.appendChild(img);
+  body.appendChild(name);
+  body.appendChild(id);
+  card.appendChild(body);
 
   return card;
 }
 
-async function getPokemonDetails(url) {
-  const response = await fetch(url);
-  const data = await response.json();
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return data;
-}
+// ====================== SEARCH ======================
+searchInput.addEventListener("input", handleSearch);
 
-async function searchPokemon() {
-  toggleLoading(true);
-  try {
-    content.innerHTML = "";
-    const searchTerm = searchInput.value.trim();
-    const pokemonsearch = await fetchPokemon(searchTerm);
+async function handleSearch() {
+  const term = searchInput.value.toLowerCase().trim();
 
-    const foundPokemonList = [pokemonsearch];
-    await displayPokemon(foundPokemonList);
-
-    toggleLoading(false);
-  } catch {
-    document.getElementById(
-      "content"
-    ).innerHTML = `<h2 class="text-white">Pokemon nicht gefunden</h2>`;
-    toggleLoading(false);
+  if (term === "") {
+    await withLoading(async () => {
+      // zurück zur normalen Liste
+      await displayPokemon(allPokemon.results.slice(0, pokemonShown), true);
+      loadMoreBtn.classList.remove("d-none");
+    });
+    return;
   }
-}
 
-function filterPokemon() {
-  toggleLoading(true);
-  content.innerHTML = "";
-  const searchTerm = searchInput.value.toLowerCase();
-  const filteredPokemon = allPokemon.results.filter((pokemon) => {
-    return pokemon.name.toLowerCase().includes(searchTerm);
+  await withLoading(async () => {
+    // Im Suchmodus: Load-More ausblenden
+    loadMoreBtn.classList.add("d-none");
+
+    if (!isNaN(parseInt(term))) {
+      // Suche per Nummer
+      const pkm = await fetchPokemonByIdOrName(term);
+      await displayPokemon([pkm], true);
+    } else {
+      // Suche per Name
+      const filtered = allPokemon.results.filter((p) =>
+        p.name.toLowerCase().includes(term)
+      );
+      if (filtered.length === 0) {
+        content.innerHTML = `<h2 class="text-white text-center">Pokémon nicht gefunden</h2>`;
+      } else {
+        await displayPokemon(filtered, true);
+      }
+    }
   });
-  displayPokemon(filteredPokemon);
 }
 
-function toggleLoading(show) {
-  if (show) {
-    loadingIndicator.classList.remove("hidden");
-    loadMoreBtn.classList.add("hidden");
-  } else {
-    loadingIndicator.classList.add("hidden");
-    loadMoreBtn.classList.remove("hidden");
-  }
+// ====================== LOAD MORE ======================
+loadMoreBtn.addEventListener("click", loadMorePokemon);
+
+async function loadMorePokemon() {
+  await withLoading(async () => {
+    const nextBatch = allPokemon.results.slice(pokemonShown, pokemonShown + 20);
+
+    if (nextBatch.length > 0) {
+      await displayPokemon(nextBatch, false); // anhängen
+      pokemonShown += 20;
+    }
+
+    if (pokemonShown >= allPokemon.results.length) {
+      loadMoreBtn.classList.add("d-none"); // nichts mehr zu laden
+    }
+  });
 }

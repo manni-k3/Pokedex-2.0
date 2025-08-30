@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -10,8 +11,10 @@ body {
     sans-serif;
 }
 
-.hidden {
-  display: none;
+footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 
 .bg-custom {
@@ -92,6 +95,17 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
   background: linear-gradient(45deg, #ff5252, #ff7979);
+}
+
+#loadingIndicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+#loadingIndicator img {
+  max-width: 100px;
 }
 
 @media (max-width: 480px) {
