@@ -1,6 +1,12 @@
 let allPokemon = [];
 let pokemonShown = 20;
 
+const pokemonModal = new bootstrap.Modal(
+  document.getElementById("pokemonModal")
+);
+const modalTitle = document.getElementById("pokemonModalLabel");
+const modalBody = document.getElementById("modalBody");
+const modalFooter = document.getElementById("modalFooter");
 const content = document.getElementById("content");
 const searchInput = document.getElementById("searchInput");
 const loadingIndicator = document.getElementById("loadingIndicator");
@@ -22,7 +28,7 @@ async function withLoading(task) {
     content.innerHTML = `<h2 class="text-white text-center">Etwas ist schiefgelaufen.</h2>`;
   } finally {
     const elapsed = Date.now() - start;
-    const remaining = Math.max(0, 2000 - elapsed); // mind. 2s
+    const remaining = Math.max(0, 1000 - elapsed);
     setTimeout(() => {
       loadingIndicator.classList.add("d-none");
       mainArea.classList.remove("d-none");
@@ -91,7 +97,13 @@ async function displayPokemon(pokemonList, reset = true) {
 // ====================== CARD ======================
 function createPokemonCard(pokemon) {
   const card = document.createElement("div");
-  card.classList.add("card", "shadow-lg", "bg-custom", "card-rounded");
+  card.classList.add(
+    "card",
+    "shadow-lg",
+    "bg-custom",
+    "card-rounded",
+    "cursor-pointer"
+  );
 
   const body = document.createElement("div");
   body.classList.add("p-2", "text-center");
@@ -114,7 +126,95 @@ function createPokemonCard(pokemon) {
   body.appendChild(id);
   card.appendChild(body);
 
+  card.addEventListener("click", () => showPokemonDetails(pokemon));
+
   return card;
+}
+
+// ================== DETAIL VIEW =====================
+function showPokemonDetails(pokemon) {
+  modalTitle.textContent = "";
+  modalBody.innerHTML = "";
+  modalFooter.innerHTML = "";
+
+  modalTitle.textContent = `${pokemon.name} #${pokemon.id}`;
+
+  const img = document.createElement("img");
+  img.src = pokemon.sprites.front_default;
+  img.alt = pokemon.name;
+  img.classList.add("img-fluid", "pokemon-modal-img");
+  modalBody.appendChild(img);
+
+  const typesContainer = document.createElement("div");
+  typesContainer.classList.add("d-flex", "justify-content-center", "mt-3");
+  pokemon.types.forEach((typeInfo) => {
+    const typeBadge = document.createElement("span");
+    typeBadge.classList.add("badge", "rounded-pill", "m-1");
+    typeBadge.textContent = typeInfo.type.name;
+    typeBadge.style.backgroundColor = getTypeColor(typeInfo.type.name);
+    typesContainer.appendChild(typeBadge);
+  });
+  modalBody.appendChild(typesContainer);
+
+  const statsContainer = document.createElement("div");
+  statsContainer.classList.add("stats-container", "mt-3");
+  pokemon.stats.forEach((statInfo) => {
+    const statRow = document.createElement("div");
+    statRow.classList.add("stat-row");
+
+    const statLabel = document.createElement("p");
+    statLabel.classList.add("stat-label");
+    statLabel.textContent = statInfo.stat.name;
+
+    const statValue = document.createElement("p");
+    statValue.classList.add("mb-0", "ms-2", "fw-bold");
+    statValue.textContent = statInfo.base_stat;
+
+    const progressBarContainer = document.createElement("div");
+    progressBarContainer.classList.add("progress", "ms-3");
+
+    const progressBar = document.createElement("div");
+    progressBar.classList.add("progress-bar");
+    progressBar.setAttribute("role", "progressbar");
+    progressBar.style.width = `${(statInfo.base_stat / 150) * 100}%`;
+    progressBar.style.backgroundColor = getStatColor(statInfo.base_stat);
+
+    progressBarContainer.appendChild(progressBar);
+    statRow.appendChild(statLabel);
+    statRow.appendChild(progressBarContainer);
+    statRow.appendChild(statValue);
+    statsContainer.appendChild(statRow);
+  });
+  modalBody.appendChild(statsContainer);
+
+  pokemonModal.show();
+}
+
+function getStatColor(value) {
+  if (value < 40) return "#ff6b6b";
+  if (value < 70) return "#ff9f43";
+  if (value < 100) return "#ffe74e";
+  return "#00b894";
+}
+
+function getTypeColor(type) {
+  const colors = {
+    fire: "#FDDFDF",
+    grass: "#DEFDE0",
+    electric: "#FCF7DE",
+    water: "#DEF3FD",
+    ground: "#f4e7da",
+    rock: "#d5d5d4",
+    fairy: "#fceaff",
+    poison: "#98d7a5",
+    bug: "#f8d5a3",
+    dragon: "#97b3e6",
+    psychic: "#eaeda1",
+    flying: "#F5F5F5",
+    fighting: "#E6E0D4",
+    normal: "#F5F5F5",
+  };
+  return colors[type] || "#777";
 }
 
 // ====================== SEARCH ======================
@@ -164,7 +264,7 @@ async function loadMorePokemon() {
     const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
 
     if (nextBatch.length > 0) {
-      await displayPokemon(nextBatch, true);
+      await displayPokemon(nextBatch, false);
     }
 
     if (pokemonShown >= allPokemon.results.length) {
