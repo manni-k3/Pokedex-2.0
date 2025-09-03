@@ -13,12 +13,13 @@ const mainArea = document.getElementById("mainArea");
 const headerTitle = document.getElementById("headerTitel");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
-const pokemonModal = new bootstrap.Modal(
-  document.getElementById("pokemonModal")
-);
 const modalTitle = document.getElementById("pokemonModalLabel");
 const modalBody = document.getElementById("modalBody");
 const modalContent = document.querySelector("#pokemonModal .modal-content");
+
+const pokemonModal = new bootstrap.Modal(
+  document.getElementById("pokemonModal")
+);
 
 // =======================================================
 // === 2. Allgemeine Hilfsfunktionen (Utilities)
@@ -138,6 +139,8 @@ async function init() {
 init();
 
 loadMoreBtn.addEventListener("click", async () => {
+  loadMoreBtn.classList.add("d-none");
+
   pokemonShown += 20;
   const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
   await withLoading(() =>
@@ -150,6 +153,7 @@ loadMoreBtn.addEventListener("click", async () => {
 
 headerTitle.addEventListener("click", (event) => {
   event.preventDefault();
+  searchInput.value = "";
   pokemonShown = 20;
   withLoading(() =>
     displayPokemon(
