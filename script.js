@@ -34,12 +34,15 @@ async function withLoading(task) {
     console.error(err);
     content.innerHTML = `<h2 class="text-white text-center">Etwas ist schiefgelaufen.</h2>`;
   } finally {
-    const elapsed = Date.now() - start;
-    const remaining = Math.max(0, 1000 - elapsed);
-    setTimeout(() => {
-      loadingIndicator.classList.add("d-none");
-      mainArea.classList.remove("d-none");
-    }, remaining);
+    return new Promise((resolve) => {
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, 1000 - elapsed);
+      setTimeout(() => {
+        loadingIndicator.classList.add("d-none");
+        mainArea.classList.remove("d-none");
+        resolve();
+      }, remaining);
+    });
   }
 }
 
@@ -81,6 +84,7 @@ async function showPrevPokemon() {
 async function handleSearch() {
   const term = searchInput.value.toLowerCase().trim();
   loadMoreBtn.classList.add("d-none");
+
   await withLoading(async () => {
     if (term === "") {
       pokemonShown = 20;
@@ -90,9 +94,9 @@ async function handleSearch() {
         showPokemonDetails,
         true
       );
-      loadMoreBtn.classList.remove("d-none");
       return;
     }
+
     if (!isNaN(parseInt(term))) {
       const pkm = await fetchPokemonByIdOrName(term);
       await displayPokemon([pkm], content, showPokemonDetails, true);
@@ -107,6 +111,10 @@ async function handleSearch() {
       }
     }
   });
+
+  if (term === "") {
+    loadMoreBtn.classList.remove("d-none");
+  }
 }
 
 // =======================================================
@@ -122,15 +130,17 @@ async function init() {
       showPokemonDetails,
       true
     );
-    loadMoreBtn.classList.remove("d-none");
   });
+
+  loadMoreBtn.classList.remove("d-none");
 }
+
 init();
 
-loadMoreBtn.addEventListener("click", () => {
+loadMoreBtn.addEventListener("click", async () => {
   pokemonShown += 20;
   const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
-  withLoading(() =>
+  await withLoading(() =>
     displayPokemon(nextBatch, content, showPokemonDetails, true)
   );
   if (pokemonShown >= allPokemon.results.length) {

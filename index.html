@@ -6,33 +6,33 @@
     <title>Pokedex</title>
     <link
       rel="icon"
-      type="igame/x-icon"
+      type="image/x-icon"
       href="./assets/icon/pokemon-1536849_640.png"
     />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css" />
 
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style/components.css" />
+    <link rel="stylesheet" href="./style/media.css" />
+    <link rel="stylesheet" href="./style/modal.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
+      defer
     ></script>
 
     <script src="./scripts/api.js" defer></script>
@@ -41,57 +41,60 @@
     <script src="./script.js" defer></script>
   </head>
   <body class="d-flex flex-column min-vh-100">
-    <main class="flex-grow-1">
-      <header
-        class="container text-center p-4 d-flex flex-column align-items-center"
-      >
-        <div
-          class="header-title-wrapper d-flex align-items-center justify-content-center mb-3"
-        >
-          <a href="#" id="headerTitel" class="text-decoration-none">
-            <h1 class="text-white press-start-2p-regular mb-0">Pokedex</h1>
-          </a>
-        </div>
-        <div class="search-container w-100">
-          <div class="search-form">
-            <input id="searchInput" type="text" placeholder="Pokemon suchen" />
-          </div>
-        </div>
-      </header>
-      <div class="container">
-        <div
-          class="text-white my-4 w-100 text-center d-none"
-          id="loadingIndicator"
-        >
-          <img
-            src="./assets/gif/Pokeball Loading.gif"
-            alt="Lade... Pokeball hüpft"
-          />
-        </div>
-        <div id="mainArea">
-          <section
-            class="row g-4 justify-content-center"
-            id="content"
-          ></section>
+    <header
+      class="container text-center p-4 d-flex flex-column align-items-center"
+    >
+      <a href="#" id="headerTitel" class="text-decoration-none">
+        <h1 class="text-white press-start-2p-regular mb-0">Pokedex</h1>
+      </a>
 
-          <div class="text-center my-4">
-            <button class="btn btn-primary d-none mx-auto" id="loadMoreBtn">
-              Mehr Anzeigen
-            </button>
-          </div>
-        </div>
+      <nav class="search-container w-100">
+        <form class="search-form" role="search">
+          <label for="searchInput" class="visually-hidden"
+            >Pokemon suchen</label
+          >
+          <input id="searchInput" type="search" placeholder="Pokemon suchen" />
+        </form>
+      </nav>
+    </header>
+
+    <main class="flex-grow-1 container">
+      <section
+        id="loadingIndicator"
+        class="text-white my-4 text-center d-none"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <img
+          src="./assets/gif/Pokeball Loading.gif"
+          alt="Lade... Pokeball hüpft"
+        />
+      </section>
+
+      <section id="mainArea">
+        <div class="row g-4 justify-content-center" id="content"></div>
+      </section>
+
+      <div class="text-center my-4">
+        <button class="btn btn-primary d-none mx-auto" id="loadMoreBtn">
+          Mehr anzeigen
+        </button>
       </div>
     </main>
+
     <footer class="bg-custom text-white text-center">
       <p>© 2025 Pokedex. Alle Rechte vorbehalten.</p>
       <p>Made by Manfred Lindauer</p>
     </footer>
+
     <div
       class="modal fade"
       id="pokemonModal"
       tabindex="-1"
       aria-labelledby="pokemonModalLabel"
       aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-custom text-white">
@@ -101,12 +104,16 @@
               type="button"
               class="btn-close btn-close-white"
               data-bs-dismiss="modal"
-              aria-label="Close"
+              aria-label="Schließen"
             ></button>
           </div>
           <div id="modalBody" class="modal-body text-center"></div>
           <div id="modalFooter" class="modal-footer justify-content-center">
-            <button id="prevBtn" class="btn btn-secondary me-auto d-none">
+            <button
+              id="prevBtn"
+              class="btn btn-secondary me-auto d-none"
+              aria-label="Vorheriges Pokémon"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -121,7 +128,11 @@
                 />
               </svg>
             </button>
-            <button id="nextBtn" class="btn btn-secondary ms-auto d-none">
+            <button
+              id="nextBtn"
+              class="btn btn-secondary ms-auto d-none"
+              aria-label="Nächstes Pokémon"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
