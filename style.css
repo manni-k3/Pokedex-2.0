@@ -213,6 +213,34 @@ footer {
   text-transform: capitalize;
 }
 
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-body .pokemon-modal-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .stats-container {
+    width: 100%;
+  }
+
+  .stat-label {
+    font-size: 0.8em;
+    flex: 0 0 70px;
+  }
+}
+
 @media (max-width: 480px) {
   .search-form {
     flex-direction: column;
@@ -310,13 +338,10 @@ footer {
   text-shadow: none;
 }
 
-/* Beispiel für den Header-Titel */
 .header-title {
-  /* ... andere Stile ... */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Beispiel für die Suchleiste */
 .search-container {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out;
