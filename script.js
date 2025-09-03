@@ -1,5 +1,6 @@
 let allPokemon = [];
 let pokemonShown = 20;
+let currentPokemonIndex = -1;
 
 const pokemonModal = new bootstrap.Modal(
   document.getElementById("pokemonModal")
@@ -12,6 +13,8 @@ const searchInput = document.getElementById("searchInput");
 const loadingIndicator = document.getElementById("loadingIndicator");
 const loadMoreBtn = document.getElementById("loadMoreBtn");
 const mainArea = document.getElementById("mainArea");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
 
 // ====================== LOADING WRAPPER ======================
 // Zeigt NUR den Loader und versteckt #mainArea.
@@ -133,9 +136,12 @@ function createPokemonCard(pokemon) {
 
 // ================== DETAIL VIEW =====================
 function showPokemonDetails(pokemon) {
+  currentPokemonIndex = allPokemon.results.findIndex(
+    (p) => p.name === pokemon.name
+  );
+
   modalTitle.textContent = "";
   modalBody.innerHTML = "";
-  modalFooter.innerHTML = "";
 
   const modalContent = document.querySelector("#pokemonModal .modal-content");
 
@@ -201,10 +207,25 @@ function showPokemonDetails(pokemon) {
     const mainType = pokemon.types[0].type.name;
     modalContent.classList.add(`modal-bg-${mainType}`);
 
-    if (mainType === "normal" || mainType === "fairy") {
+    if (
+      mainType === "normal" ||
+      mainType === "fairy" ||
+      mainType === "pison" ||
+      mainType === "flying"
+    ) {
       modalContent.classList.remove("text-white");
       modalContent.classList.add("text-dark");
     }
+  }
+
+  prevBtn.classList.add("d-none");
+  nextBtn.classList.add("d-none");
+
+  if (currentPokemonIndex > 0) {
+    prevBtn.classList.remove("d-none");
+  }
+  if (currentPokemonIndex < allPokemon.results.length - 1) {
+    nextBtn.classList.remove("d-none");
   }
 
   pokemonModal.show();
@@ -245,7 +266,7 @@ async function handleSearch() {
 
   if (term === "") {
     await withLoading(async () => {
-      // zurück zur normalen Liste
+      pokemonShown += 20;
       await displayPokemon(allPokemon.results.slice(0, pokemonShown), true);
       loadMoreBtn.classList.remove("d-none");
     });
@@ -253,15 +274,12 @@ async function handleSearch() {
   }
 
   await withLoading(async () => {
-    // Im Suchmodus: Load-More ausblenden
     loadMoreBtn.classList.add("d-none");
 
     if (!isNaN(parseInt(term))) {
-      // Suche per Nummer
       const pkm = await fetchPokemonByIdOrName(term);
       await displayPokemon([pkm], true);
     } else {
-      // Suche per Name
       const filtered = allPokemon.results.filter((p) =>
         p.name.toLowerCase().includes(term)
       );
@@ -284,7 +302,7 @@ async function loadMorePokemon() {
     const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
 
     if (nextBatch.length > 0) {
-      await displayPokemon(nextBatch, false);
+      await displayPokemon(nextBatch, true);
     }
 
     if (pokemonShown >= allPokemon.results.length) {
@@ -292,3 +310,33 @@ async function loadMorePokemon() {
     }
   });
 }
+
+const headerTitel = document.getElementById("headerTitel");
+
+headerTitel.addEventListener("click", (event) => {
+  event.preventDefault();
+  pokemonShown = 20;
+  withLoading(async () => {
+    await displayPokemon(allPokemon.results.slice(0, pokemonShown), true);
+    loadMoreBtn.classList.remove("d-none");
+  });
+});
+
+async function showNextPokemon() {
+  if (currentPokemonIndex < allPokemon.results.length - 1) {
+    const nextPokemon = allPokemon.results[currentPokemonIndex + 1];
+    const details = await fetchPokemonDetails(nextPokemon.url);
+    showPokemonDetails(details);
+  }
+}
+
+async function showPrevPokemon() {
+  if (currentPokemonIndex > 0) {
+    const prevPokemon = allPokemon.results[currentPokemonIndex - 1];
+    const details = await fetchPokemonDetails(prevPokemon.url);
+    showPokemonDetails(details);
+  }
+}
+
+prevBtn.addEventListener("click", showPrevPokemon);
+nextBtn.addEventListener("click", showNextPokemon);

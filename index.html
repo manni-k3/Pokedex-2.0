@@ -42,8 +42,14 @@
       <header
         class="container text-center p-4 d-flex flex-column align-items-center"
       >
-        <h1 class="text-white press-start-2p-regular">Pokedex</h1>
-        <div class="search-container">
+        <div
+          class="header-title-wrapper d-flex align-items-center justify-content-center mb-3"
+        >
+          <a href="#" id="headerTitel" class="text-decoration-none">
+            <h1 class="text-white press-start-2p-regular mb-0">Pokedex</h1>
+          </a>
+        </div>
+        <div class="search-container w-100">
           <div class="search-form">
             <input id="searchInput" type="text" placeholder="Pokemon suchen" />
           </div>
@@ -96,10 +102,38 @@
             ></button>
           </div>
           <div id="modalBody" class="modal-body text-center"></div>
-          <div
-            id="modalFooter"
-            class="modal-footer justify-content-center"
-          ></div>
+          <div id="modalFooter" class="modal-footer justify-content-center">
+            <button id="prevBtn" class="btn btn-secondary me-auto d-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-arrow-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+                />
+              </svg>
+            </button>
+            <button id="nextBtn" class="btn btn-secondary ms-auto d-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-arrow-right"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
