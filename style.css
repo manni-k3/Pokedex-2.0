@@ -203,3 +203,114 @@ footer {
     gap: 0;
   }
 }
+
+.modal-bg-fire {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+}
+
+.modal-bg-water {
+  background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+}
+
+.modal-bg-grass {
+  background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+}
+
+.modal-bg-electric {
+  background: linear-gradient(135deg, #fceb55 0%, #f6d200 100%);
+}
+
+.modal-bg-bug {
+  background: linear-gradient(135deg, #a7d129 0%, #6e8e16 100%);
+}
+
+.modal-bg-normal {
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.modal-bg.poison {
+  background: linear-gradient(135deg, #9d50bb 0%, #6e48aa 100%);
+}
+
+.modal.bg.fairy {
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+}
+
+.modal-bg-ground {
+  background: linear-gradient(135deg, #edd2b3 0%, #b38e5d 100%);
+}
+
+.modal-bg-fighting {
+  background: linear-gradient(135deg, #c79a77 0%, #8b6e5e 100%);
+}
+
+.modal-bg-psychic {
+  background: linear-gradient(135deg, #ea8a8a 0%, #e25050 100%);
+}
+
+.modal-bg-rock {
+  background: linear-gradient(135deg, #b0a1a1 0%, #8e8080 100%);
+}
+
+.modal-bg-ghost {
+  background: linear-gradient(135deg, #7c538c 0%, #5d488e 100%);
+}
+
+.modal-bg-dragon {
+  background: linear-gradient(135deg, #5c62d5 0%, #21307e 100%);
+}
+
+.modal-bg-steel {
+  background: linear-gradient(135deg, #afc4d5 0%, #899ba8 100%);
+}
+
+.modal-bg-ice {
+  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.modal-bg-dark {
+  background: linear-gradient(135deg, #4b4b4b 0%, #2c2c2c 100%);
+}
+
+.modal-bg-flying {
+  background: linear-gradient(135deg, #a8c0ff 0%, #392b58 100%);
+}
+
+.modal-content.bg-custon {
+  background: none;
+  border: none;
+}
+
+.modal-content.text-dark {
+  color: #333;
+}
+
+.modal-content.text.dark .stat-labl,
+.modal-content.text-dark .stat-value {
+  color: #333;
+}
+
+.modal-content.text-dark .sat-label {
+  text-shadow: none;
+}
+
+/* Beispiel für den Header-Titel */
+.header-title {
+  /* ... andere Stile ... */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Beispiel für die Suchleiste */
+.search-container {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+.search-container:hover {
+  transform: translateY(-2px);
+}
+
+.press-start-2p-regular {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}

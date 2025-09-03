@@ -137,6 +137,11 @@ function showPokemonDetails(pokemon) {
   modalBody.innerHTML = "";
   modalFooter.innerHTML = "";
 
+  const modalContent = document.querySelector("#pokemonModal .modal-content");
+
+  modalContent.className = "modal-content";
+  modalContent.classList.add("text-white");
+
   modalTitle.textContent = `${pokemon.name} #${pokemon.id}`;
 
   const img = document.createElement("img");
@@ -149,7 +154,12 @@ function showPokemonDetails(pokemon) {
   typesContainer.classList.add("d-flex", "justify-content-center", "mt-3");
   pokemon.types.forEach((typeInfo) => {
     const typeBadge = document.createElement("span");
-    typeBadge.classList.add("badge", "rounded-pill", "m-1");
+    typeBadge.classList.add(
+      "badge",
+      "rounded-pill",
+      "m-1",
+      "type-badge-shadow"
+    );
     typeBadge.textContent = typeInfo.type.name;
     typeBadge.style.backgroundColor = getTypeColor(typeInfo.type.name);
     typesContainer.appendChild(typeBadge);
@@ -167,7 +177,7 @@ function showPokemonDetails(pokemon) {
     statLabel.textContent = statInfo.stat.name;
 
     const statValue = document.createElement("p");
-    statValue.classList.add("mb-0", "ms-2", "fw-bold");
+    statValue.classList.add("mb-0", "ms-2", "fw-bold", "stat-value");
     statValue.textContent = statInfo.base_stat;
 
     const progressBarContainer = document.createElement("div");
@@ -186,6 +196,16 @@ function showPokemonDetails(pokemon) {
     statsContainer.appendChild(statRow);
   });
   modalBody.appendChild(statsContainer);
+
+  if (pokemon.types.length > 0) {
+    const mainType = pokemon.types[0].type.name;
+    modalContent.classList.add(`modal-bg-${mainType}`);
+
+    if (mainType === "normal" || mainType === "fairy") {
+      modalContent.classList.remove("text-white");
+      modalContent.classList.add("text-dark");
+    }
+  }
 
   pokemonModal.show();
 }
@@ -268,7 +288,7 @@ async function loadMorePokemon() {
     }
 
     if (pokemonShown >= allPokemon.results.length) {
-      loadMoreBtn.classList.add("d-none"); // nichts mehr zu laden
+      loadMoreBtn.classList.add("d-none");
     }
   });
 }
