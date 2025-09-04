@@ -143,11 +143,13 @@ loadMoreBtn.addEventListener("click", async () => {
 
   pokemonShown += 20;
   const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
-  await withLoading(() =>
-    displayPokemon(nextBatch, content, showPokemonDetails, true)
-  );
-  if (pokemonShown >= allPokemon.results.length) {
-    loadMoreBtn.classList.add("d-none");
+
+  await withLoading(async () => {
+    await displayPokemon(nextBatch, content, showPokemonDetails, true);
+  });
+
+  if (pokemonShown < allPokemon.results.length) {
+    loadMoreBtn.classList.remove("d-none");
   }
 });
 
