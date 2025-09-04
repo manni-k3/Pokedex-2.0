@@ -168,6 +168,21 @@ headerTitle.addEventListener("click", (event) => {
   loadMoreBtn.classList.remove("d-none");
 });
 
-searchInput.addEventListener("input", handleSearch);
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+
+  if (query.length < 3) {
+    content.innerHTML = "";
+    loadMoreBtn.classList.add("d-none");
+    return;
+  }
+  const filteredPokemon = allPokemon.results.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(query)
+  );
+
+  content.innerHTML = "";
+  displayPokemon(filteredPokemon, content, showPokemonDetails, false);
+  loadMoreBtn.classList.add("d-done");
+});
 prevBtn.addEventListener("click", showPrevPokemon);
 nextBtn.addEventListener("click", showNextPokemon);
