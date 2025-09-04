@@ -186,5 +186,3 @@ searchInput.addEventListener("input", () => {
 });
 prevBtn.addEventListener("click", showPrevPokemon);
 nextBtn.addEventListener("click", showNextPokemon);
-
-function blalbabla() {}
