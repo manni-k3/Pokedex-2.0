@@ -137,6 +137,63 @@ dialog.modal {
   background: linear-gradient(135deg, #a8c0ff 0%, #392b58 100%);
 }
 
+.type-fire {
+  background-color: #fddfdf;
+}
+.type-grass {
+  background-color: #defde0;
+}
+.type-electric {
+  background-color: #fcf7de;
+}
+.type-water {
+  background-color: #def3fd;
+}
+.type-ground {
+  background-color: #f4e7da;
+}
+.type-rock {
+  background-color: #d5d5d4;
+}
+.type-fairy {
+  background-color: #fceaff;
+}
+.type-poison {
+  background-color: #98d7a5;
+}
+.type-bug {
+  background-color: #f8d5a3;
+}
+.type-dragon {
+  background-color: #97b3e6;
+}
+.type-psychic {
+  background-color: #eaeda1;
+}
+.type-flying {
+  background-color: #f5f5f5;
+}
+.type-fighting {
+  background-color: #e6e0d4;
+}
+.type-normal {
+  background-color: #f5f5f5;
+}
+.type-dark {
+  background-color: #4b4b4b;
+  color: #fff;
+}
+.type-steel {
+  background-color: #afc4d5;
+}
+.type-ice {
+  background-color: #a1c4fd;
+}
+.type-ghost {
+  background-color: #7c538c;
+  color: #fff;
+}
+
 .modal-content.bg-custom {
   background: none;
   border: none;
