@@ -1,6 +1,3 @@
-// =======================================================
-// === 1. Globale Variablen & DOM-Elemente
-// =======================================================
 let allPokemon = [];
 let pokemonShown = 20;
 let currentPokemonIndex = -1;
@@ -20,10 +17,6 @@ const modalContent = document.querySelector("#pokemonModal .modal-content");
 const pokemonModal = new bootstrap.Modal(
   document.getElementById("pokemonModal")
 );
-
-// =======================================================
-// === 2. Allgemeine Hilfsfunktionen (Utilities)
-// =======================================================
 
 async function withLoading(task) {
   const start = Date.now();
@@ -47,14 +40,7 @@ async function withLoading(task) {
   }
 }
 
-// =======================================================
-// === 3. Modal-Logik
-// =======================================================
-
-async function showPokemonDetails(pokemon) {
-  currentPokemonIndex = allPokemon.results.findIndex(
-    (p) => p.name === pokemon.name
-  );
+function updateModalForPokemon(pokemon) {
   updateModalContent(modalTitle, modalBody, pokemon);
   setModalBackground(modalContent, pokemon);
   updateModalNavigation(
@@ -63,64 +49,124 @@ async function showPokemonDetails(pokemon) {
     currentPokemonIndex,
     allPokemon.results.length
   );
+}
+
+async function fetchAndShowPokemon(pokemon) {
+  const details = await fetchPokemonDetails(pokemon.url);
+  showPokemonDetails(details);
+}
+
+async function showPokemonDetails(pokemon) {
+  currentPokemonIndex = allPokemon.results.findIndex(
+    (p) => p.name === pokemon.name
+  );
+  updateModalForPokemon(pokemon);
   pokemonModal.show();
 }
 
 async function showNextPokemon() {
+  if (currentPokemonIndex + 1 >= allPokemon.results.length) return;
   const nextPokemon = allPokemon.results[currentPokemonIndex + 1];
-  const details = await fetchPokemonDetails(nextPokemon.url);
-  showPokemonDetails(details);
+  await fetchAndShowPokemon(nextPokemon);
 }
 
 async function showPrevPokemon() {
+  if (currentPokemonIndex - 1 < 0) return;
   const prevPokemon = allPokemon.results[currentPokemonIndex - 1];
-  const details = await fetchPokemonDetails(prevPokemon.url);
-  showPokemonDetails(details);
+  await fetchAndShowPokemon(prevPokemon);
 }
 
-// =======================================================
-// === 4. Suchfunktionen
-// =======================================================
+async function handleEmptySearch() {
+  pokemonShown = 20;
+  await displayPokemon(
+    allPokemon.results.slice(0, pokemonShown),
+    content,
+    showPokemonDetails,
+    true
+  );
+  loadMoreBtn.classList.remove("d-none");
+}
+
+async function handleNumericSearch(term) {
+  const pkm = await fetchPokemonByIdOrName(term);
+  await displayPokemon([pkm], content, showPokemonDetails, true);
+  loadMoreBtn.classList.add("d-none");
+}
+
+async function handleTextSearch(term) {
+  const filtered = allPokemon.results.filter((p) =>
+    p.name.toLowerCase().includes(term)
+  );
+  if (filtered.length === 0) {
+    content.innerHTML = `<h2 class="text-white text-center">Pokémon nicht gefunden</h2>`;
+  } else {
+    await displayPokemon(filtered, content, showPokemonDetails, true);
+  }
+  loadMoreBtn.classList.add("d-none");
+}
 
 async function handleSearch() {
   const term = searchInput.value.toLowerCase().trim();
-  loadMoreBtn.classList.add("d-none");
 
   await withLoading(async () => {
     if (term === "") {
-      pokemonShown = 20;
-      await displayPokemon(
-        allPokemon.results.slice(0, pokemonShown),
-        content,
-        showPokemonDetails,
-        true
-      );
+      await handleEmptySearch();
       return;
     }
-
     if (!isNaN(parseInt(term))) {
-      const pkm = await fetchPokemonByIdOrName(term);
-      await displayPokemon([pkm], content, showPokemonDetails, true);
+      await handleNumericSearch(term);
     } else {
-      const filtered = allPokemon.results.filter((p) =>
-        p.name.toLowerCase().includes(term)
-      );
-      if (filtered.length === 0) {
-        content.innerHTML = `<h2 class="text-white text-center">Pokémon nicht gefunden</h2>`;
-      } else {
-        await displayPokemon(filtered, content, showPokemonDetails, true);
-      }
+      await handleTextSearch(term);
     }
   });
+}
 
-  if (term === "") {
+async function onLoadMoreClick() {
+  loadMoreBtn.classList.add("d-none");
+
+  pokemonShown += 20;
+  const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
+
+  await withLoading(async () => {
+    await displayPokemon(nextBatch, content, showPokemonDetails, true);
+  });
+
+  if (pokemonShown < allPokemon.results.length) {
     loadMoreBtn.classList.remove("d-none");
   }
 }
 
-// =======================================================
-// === 5. Initialisierung & Event-Listener
-// =======================================================
+function onHeaderTitleClick(event) {
+  event.preventDefault();
+  searchInput.value = "";
+  pokemonShown = 20;
+  withLoading(() =>
+    displayPokemon(
+      allPokemon.results.slice(0, pokemonShown),
+      content,
+      showPokemonDetails,
+      true
+    )
+  );
+  loadMoreBtn.classList.remove("d-none");
+}
+
+function onSearchInput() {
+  const query = searchInput.value.toLowerCase();
+
+  if (query.length < 3) {
+    content.innerHTML = "";
+    loadMoreBtn.classList.add("d-none");
+    return;
+  }
+  const filteredPokemon = allPokemon.results.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(query)
+  );
+
+  content.innerHTML = "";
+  displayPokemon(filteredPokemon, content, showPokemonDetails, false);
+  loadMoreBtn.classList.add("d-none");
+}
 
 async function init() {
   await withLoading(async () => {
@@ -138,52 +184,9 @@ async function init() {
 
 init();
 
-loadMoreBtn.addEventListener("click", async () => {
-  loadMoreBtn.classList.add("d-none");
-
-  pokemonShown += 20;
-  const nextBatch = allPokemon.results.slice(pokemonShown - 20, pokemonShown);
-
-  await withLoading(async () => {
-    await displayPokemon(nextBatch, content, showPokemonDetails, true);
-  });
-
-  if (pokemonShown < allPokemon.results.length) {
-    loadMoreBtn.classList.remove("d-none");
-  }
-});
-
-headerTitle.addEventListener("click", (event) => {
-  event.preventDefault();
-  searchInput.value = "";
-  pokemonShown = 20;
-  withLoading(() =>
-    displayPokemon(
-      allPokemon.results.slice(0, pokemonShown),
-      content,
-      showPokemonDetails,
-      true
-    )
-  );
-  loadMoreBtn.classList.remove("d-none");
-});
-
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase();
-
-  if (query.length < 3) {
-    content.innerHTML = "";
-    loadMoreBtn.classList.add("d-none");
-    return;
-  }
-  const filteredPokemon = allPokemon.results.filter((pokemon) =>
-    pokemon.name.toLowerCase().includes(query)
-  );
-
-  content.innerHTML = "";
-  displayPokemon(filteredPokemon, content, showPokemonDetails, false);
-  loadMoreBtn.classList.add("d-done");
-});
+loadMoreBtn.addEventListener("click", onLoadMoreClick);
+headerTitle.addEventListener("click", onHeaderTitleClick);
+searchInput.addEventListener("input", onSearchInput);
 prevBtn.addEventListener("click", showPrevPokemon);
 nextBtn.addEventListener("click", showNextPokemon);
 

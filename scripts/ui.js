@@ -1,5 +1,3 @@
-// ui.js
-
 function getTypeColor(type) {
   const colors = {
     fire: "#FDDFDF",
