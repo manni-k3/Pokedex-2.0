@@ -1,23 +1,12 @@
-function buildTypeBadges(pokemon) {
-  return pokemon.types
-    .map(
-      (typeInfo) => `
-      <span class="badge rounded-pill m-1 type-badge-shadow type-${typeInfo.type.name}">
-        ${typeInfo.type.name}
-      </span>
-    `
-    )
-    .join("");
+function fetchDetailsIfNeeded(pokemonList) {
+  const needsDetails = pokemonList[0] && pokemonList[0].url;
+  if (!needsDetails) return Promise.resolve(pokemonList);
+
+  const promises = pokemonList.map((p) => fetchPokemonDetails(p.url));
+  return Promise.all(promises);
 }
 
-function getStatColor(value) {
-  if (value < 40) return "#ff6b6b";
-  if (value < 70) return "#ff9f43";
-  if (value < 100) return "#ffe74e";
-  return "#00b894";
-}
-
-function createPokemonCard(pokemon, onClick) {
+function createCardElement(pokemon, onClick) {
   const column = document.createElement("div");
   column.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3");
   column.innerHTML = getPokemonCardHTML(pokemon);
@@ -28,25 +17,17 @@ function createPokemonCard(pokemon, onClick) {
   return column;
 }
 
-async function fetchPokemonDetailsList(pokemonList) {
-  const needsDetails = pokemonList[0] && pokemonList[0].url;
-  if (!needsDetails) return pokemonList;
-
-  const promises = pokemonList.map((p) => fetchPokemonDetails(p.url));
-  return await Promise.all(promises);
-}
-
 function renderPokemonCards(pokemonList, onCardClick) {
   const fragment = document.createDocumentFragment();
   pokemonList.forEach((pokemon) => {
-    const card = createPokemonCard(pokemon, () => onCardClick(pokemon));
+    const card = createCardElement(pokemon, () => onCardClick(pokemon));
     fragment.appendChild(card);
   });
   return fragment;
 }
 
 async function displayPokemon(pokemonList, content, onCardClick, reset = true) {
-  const detailsList = await fetchPokemonDetailsList(pokemonList);
+  const detailsList = await fetchDetailsIfNeeded(pokemonList);
   const fragment = renderPokemonCards(detailsList, onCardClick);
 
   if (reset) content.innerHTML = "";
@@ -63,6 +44,13 @@ function buildTypeBadges(pokemon) {
       `
     )
     .join("");
+}
+
+function getStatColor(value) {
+  if (value < 40) return "#ff6b6b";
+  if (value < 70) return "#ff9f43";
+  if (value < 100) return "#ffe74e";
+  return "#00b894";
 }
 
 function buildStatBars(pokemon) {
