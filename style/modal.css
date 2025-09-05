@@ -40,6 +40,9 @@
 .progress-bar {
   border-radius: 5px;
   transition: width 0.5s ease-in-out;
+  background-color: #007bff;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
 dialog.modal {
@@ -167,4 +170,21 @@ dialog.modal {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header .btn-close {
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-header .btn-close:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

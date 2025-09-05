@@ -171,13 +171,25 @@ headerTitle.addEventListener("click", (event) => {
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.toLowerCase();
 
+  if (query === "") {
+    content.innerHTML = "";
+    displayPokemon(
+      allPokemon.results.slice(0, pokemonShown),
+      content,
+      showPokemonDetails,
+      true
+    );
+    loadMoreBtn.classList.remove("d-none");
+    return;
+  }
+
   if (query.length < 3) {
     content.innerHTML = "";
     loadMoreBtn.classList.add("d-none");
     return;
   }
   const filteredPokemon = allPokemon.results.filter((pokemon) =>
-    pokemon.name.toLowerCase().includes(query)
+    pokemon.name.toLowerCase().startsWith(query)
   );
 
   content.innerHTML = "";
