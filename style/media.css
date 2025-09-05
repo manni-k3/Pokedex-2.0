@@ -8,21 +8,42 @@
     max-width: 95%;
   }
   .modal-content {
+    max-height: 90vh;
+    overflow: hidden;
     transform: scale(0.9);
   }
 
+  .modal-body {
+    overflow-y: auto;
+    max-height: calc(90vh - 120px);
+    padding: 0.5rem 1rem;
+  }
+
   .modal-body .pokemon-modal-img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .modal-title {
+    font-size: 0.9rem;
   }
 
   .stat-label {
-    flex: 0 0 80px;
-    font-size: 16px;
+    flex: 0 0 70px;
+    font-size: 14px;
   }
 
   .stat-value {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .modal-footer {
+    padding: 0.5rem;
+  }
+
+  .modal-footer .btn-secondary {
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -32,13 +53,20 @@
     max-width: 95%;
   }
 
+  .modal-content {
+    max-height: 90vh;
+    overflow: hidden;
+  }
+
   .modal-body {
+    overflow-y: auto;
+    max-height: calc(90vh - 130px);
     padding: 1rem;
   }
 
   .modal-body .pokemon-modal-img {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
   }
 
   .modal-title {
@@ -51,6 +79,11 @@
 
   .stat-label {
     flex: 0 0 60px;
+    font-size: 15px;
+  }
+
+  .stat-value {
+    font-size: 15px;
   }
 
   .modal-footer {
@@ -70,15 +103,34 @@
   }
 
   .modal-content {
+    max-height: 90vh;
+    overflow: hidden;
     transform: scale(0.95);
   }
 
+  .modal-body {
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+  }
+
   .modal-body .pokemon-modal-img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
   }
 
   .stats-container {
     width: 100%;
+  }
+
+  .stat-label {
+    font-size: 16px;
+  }
+
+  .stat-value {
+    font-size: 16px;
   }
 }
