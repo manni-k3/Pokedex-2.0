@@ -3,6 +3,27 @@
     flex-direction: column;
     gap: 0;
   }
+
+  .modal-dialog {
+    max-width: 95%;
+  }
+  .modal-content {
+    transform: scale(0.9);
+  }
+
+  .modal-body .pokemon-modal-img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .stat-label {
+    flex: 0 0 80px;
+    font-size: 16px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -12,7 +33,7 @@
   }
 
   .modal-body {
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   .modal-body .pokemon-modal-img {
@@ -26,11 +47,9 @@
 
   .stats-container {
     width: 100%;
-    font-size: 0.75em;
   }
 
   .stat-label {
-    font-size: 0.9em;
     flex: 0 0 60px;
   }
 
@@ -41,5 +60,25 @@
   .modal-footer .btn-secondary {
     width: 40px;
     height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .modal-content {
+    transform: scale(0.95);
+  }
+
+  .modal-body .pokemon-modal-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .stats-container {
+    width: 100%;
   }
 }

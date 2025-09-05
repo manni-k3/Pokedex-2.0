@@ -3,7 +3,7 @@ function getStatBarHTML(statInfo, color) {
   return `
       <div class="stat-row">
         <p class="stat-label">${statInfo.stat.name}</p>
-        <div class="progress ms-3">
+        <div class="progress">
           <div class="progress-bar" role="progressbar" style="width: ${widthPercentage}%; background-color: ${color};"></div>
         </div>
         <p class="mb-0 ms-2 fw-bold stat-value">${statInfo.base_stat}</p>
@@ -26,7 +26,7 @@ function getPokemonCardHTML(pokemon) {
 function getModalBodyHTML(pokemon, typesHTML, statsHTML) {
   return `
       <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" class="img-fluid pokemon-modal-img" />
-      <div class="d-flex justify-content-center mt-3">${typesHTML}</div>
+      <div class="d-flex justify-content-center">${typesHTML}</div>
       <div class="stats-container mt-3">${statsHTML}</div>
     `;
 }

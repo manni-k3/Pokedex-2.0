@@ -1,27 +1,13 @@
-// ui.js
-
-function getTypeColor(type) {
-  const colors = {
-    fire: "#FDDFDF",
-    grass: "#DEFDE0",
-    electric: "#FCF7DE",
-    water: "#DEF3FD",
-    ground: "#f4e7da",
-    rock: "#d5d5d4",
-    fairy: "#fceaff",
-    poison: "#98d7a5",
-    bug: "#f8d5a3",
-    dragon: "#97b3e6",
-    psychic: "#eaeda1",
-    flying: "#F5F5F5",
-    fighting: "#E6E0D4",
-    normal: "#F5F5F5",
-    dark: "#4B4B4B",
-    steel: "#afc4d5",
-    ice: "#a1c4fd",
-    ghost: "#7c538c",
-  };
-  return colors[type] || "#777";
+function buildTypeBadges(pokemon) {
+  return pokemon.types
+    .map(
+      (typeInfo) => `
+      <span class="badge rounded-pill m-1 type-badge-shadow type-${typeInfo.type.name}">
+        ${typeInfo.type.name}
+      </span>
+    `
+    )
+    .join("");
 }
 
 function getStatColor(value) {
@@ -42,48 +28,62 @@ function createPokemonCard(pokemon, onClick) {
   return column;
 }
 
-async function displayPokemon(pokemonList, content, onCardClick, reset = true) {
-  const fragment = document.createDocumentFragment();
+async function fetchPokemonDetailsList(pokemonList) {
   const needsDetails = pokemonList[0] && pokemonList[0].url;
-  let detailsList = [];
+  if (!needsDetails) return pokemonList;
 
-  if (needsDetails) {
-    const promises = pokemonList.map((p) => fetchPokemonDetails(p.url));
-    detailsList = await Promise.all(promises);
-  } else {
-    detailsList = pokemonList;
-  }
+  const promises = pokemonList.map((p) => fetchPokemonDetails(p.url));
+  return await Promise.all(promises);
+}
 
-  detailsList.forEach((pokemon) => {
+function renderPokemonCards(pokemonList, onCardClick) {
+  const fragment = document.createDocumentFragment();
+  pokemonList.forEach((pokemon) => {
     const card = createPokemonCard(pokemon, () => onCardClick(pokemon));
     fragment.appendChild(card);
   });
+  return fragment;
+}
+
+async function displayPokemon(pokemonList, content, onCardClick, reset = true) {
+  const detailsList = await fetchPokemonDetailsList(pokemonList);
+  const fragment = renderPokemonCards(detailsList, onCardClick);
 
   if (reset) content.innerHTML = "";
   content.appendChild(fragment);
 }
 
-function updateModalContent(modalTitle, modalBody, pokemon) {
-  const typesHTML = pokemon.types
+function buildTypeBadges(pokemon) {
+  return pokemon.types
     .map(
       (typeInfo) => `
-    <span class="badge rounded-pill m-1 type-badge-shadow" style="background-color: ${getTypeColor(
-      typeInfo.type.name
-    )};">
-      ${typeInfo.type.name}
-    </span>
-  `
+        <span class="badge rounded-pill m-1 type-badge-shadow type-${typeInfo.type.name}">
+          ${typeInfo.type.name}
+        </span>
+      `
     )
     .join("");
+}
 
-  const statsHTML = pokemon.stats
+function buildStatBars(pokemon) {
+  return pokemon.stats
     .map((statInfo) =>
       getStatBarHTML(statInfo, getStatColor(statInfo.base_stat))
     )
     .join("");
+}
+
+function updateModalContent(modalTitle, modalBody, pokemon) {
+  const typesHTML = buildTypeBadges(pokemon);
+  const statsHTML = buildStatBars(pokemon);
 
   modalTitle.textContent = `${pokemon.name} #${pokemon.id}`;
   modalBody.innerHTML = getModalBodyHTML(pokemon, typesHTML, statsHTML);
+}
+
+function isDarkTextType(type) {
+  const darkTextTypes = ["normal", "fairy", "poison", "flying"];
+  return darkTextTypes.includes(type);
 }
 
 function setModalBackground(modalContent, pokemon) {
@@ -92,8 +92,8 @@ function setModalBackground(modalContent, pokemon) {
   if (pokemon.types.length > 0) {
     const mainType = pokemon.types[0].type.name;
     modalContent.classList.add(`modal-bg-${mainType}`);
-    const darkTextTypes = ["normal", "fairy", "poison", "flying"];
-    if (darkTextTypes.includes(mainType)) {
+
+    if (isDarkTextType(mainType)) {
       modalContent.classList.remove("text-white");
       modalContent.classList.add("text-dark");
     } else {
