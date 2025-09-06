@@ -152,7 +152,7 @@ function handleValidQuery(query) {
     pokemon.name.toLowerCase().startsWith(query)
   );
   if (filteredPokemon.length === 0) {
-    content.innerHTML = `<h2 class="text-white text-center">Pokémon nicht gefunden</h2>`;
+    content.innerHTML = `<h2 class="text-white text-center">Pokémon not found</h2>`;
   } else {
     content.innerHTML = "";
     displayPokemon(filteredPokemon, content, showPokemonDetails, false);
