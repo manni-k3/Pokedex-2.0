@@ -193,9 +193,7 @@ async function onLoadMoreClick() {
   const nextBatch = allPokemon.results.slice(pokemonShown, pokemonShown + 20);
   pokemonShown += 20;
 
-  await withLoading(async () => {
-    await renderPokemonList(nextBatch);
-  });
+  displayPokemon(nextBatch, content, showPokemonDetails, false);
 
   if (pokemonShown < allPokemon.results.length) {
     loadMoreBtn.classList.remove("d-none");

@@ -92,59 +92,91 @@ dialog.modal {
   font-size: 16px;
 }
 
-.modal-bg-fire {
-  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+.card.modal-bg-fire {
+  background: linear-gradient(135deg, var(--type-color-fire) 0%, #feb47b 100%);
 }
-.modal-bg-water {
-  background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+.card.modal-bg-water {
+  background: linear-gradient(135deg, var(--type-color-water) 0%, #2193b0 100%);
 }
-.modal-bg-grass {
-  background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+.card.modal-bg-grass {
+  background: linear-gradient(135deg, var(--type-color-grass) 0%, #56ab2f 100%);
 }
-.modal-bg-electric {
-  background: linear-gradient(135deg, #fceb55 0%, #f6d200 100%);
+.card.modal-bg-electric {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-electric) 0%,
+    #f6d200 100%
+  );
 }
-.modal-bg-bug {
-  background: linear-gradient(135deg, #a7d129 0%, #6e8e16 100%);
+.card.modal-bg-bug {
+  background: linear-gradient(135deg, var(--type-color-bug) 0%, #6e8e16 100%);
 }
-.modal-bg-normal {
-  background: linear-gradient(135deg, #e6e6dc 0%, #c4c3b5 100%);
+.card.modal-bg-normal {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-normal) 0%,
+    #c4c3b5 100%
+  );
 }
-.modal-bg-poison {
-  background: linear-gradient(135deg, #9d50bb 0%, #6e48aa 100%);
+.card.modal-bg-poison {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-poison) 0%,
+    #6e48aa 100%
+  );
 }
-.modal-bg-fairy {
-  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+.card.modal-bg-fairy {
+  background: linear-gradient(135deg, var(--type-color-fairy) 0%, #a6c1ee 100%);
 }
-.modal-bg-ground {
-  background: linear-gradient(135deg, #edd2b3 0%, #b38e5d 100%);
+.card.modal-bg-ground {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-ground) 0%,
+    #b38e5d 100%
+  );
 }
-.modal-bg-fighting {
-  background: linear-gradient(135deg, #c79a77 0%, #8b6e5e 100%);
+.card.modal-bg-fighting {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-fighting) 0%,
+    #8b6e5e 100%
+  );
 }
-.modal-bg-psychic {
-  background: linear-gradient(135deg, #ea8a8a 0%, #e25050 100%);
+.card.modal-bg-psychic {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-psychic) 0%,
+    #e25050 100%
+  );
 }
-.modal-bg-rock {
-  background: linear-gradient(135deg, #b0a1a1 0%, #8e8080 100%);
+.card.modal-bg-rock {
+  background: linear-gradient(135deg, var(--type-color-rock) 0%, #8e8080 100%);
 }
-.modal-bg-ghost {
-  background: linear-gradient(135deg, #7c538c 0%, #5d488e 100%);
+.card.modal-bg-ghost {
+  background: linear-gradient(135deg, var(--type-color-ghost) 0%, #5d488e 100%);
 }
-.modal-bg-dragon {
-  background: linear-gradient(135deg, #5c62d5 0%, #21307e 100%);
+.card.modal-bg-dragon {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-dragon) 0%,
+    #21307e 100%
+  );
 }
-.modal-bg-steel {
-  background: linear-gradient(135deg, #afc4d5 0%, #899ba8 100%);
+.card.modal-bg-steel {
+  background: linear-gradient(135deg, var(--type-color-steel) 0%, #899ba8 100%);
 }
-.modal-bg-ice {
-  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+.card.modal-bg-ice {
+  background: linear-gradient(135deg, var(--type-color-ice) 0%, #c2e9fb 100%);
 }
-.modal-bg-dark {
-  background: linear-gradient(135deg, #4b4b4b 0%, #2c2c2c 100%);
+.card.modal-bg-dark {
+  background: linear-gradient(135deg, var(--type-color-dark) 0%, #2c2c2c 100%);
 }
-.modal-bg-flying {
-  background: linear-gradient(135deg, #a8c0ff 0%, #392b58 100%);
+.card.modal-bg-flying {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-flying) 0%,
+    #392b58 100%
+  );
 }
 
 .type-fire {
@@ -259,4 +291,112 @@ dialog.modal {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+:root {
+  --type-color-fire: #ff7e5f;
+  --type-color-water: #6dd5ed;
+  --type-color-grass: #56ab2f;
+  --type-color-electric: #f6d200;
+  --type-color-bug: #6e8e16;
+  --type-color-normal: #c4c3b5;
+  --type-color-poison: #6e48aa;
+  --type-color-fairy: #a6c1ee;
+  --type-color-ground: #b38e5d;
+  --type-color-fighting: #8b6e5e;
+  --type-color-psychic: #e25050;
+  --type-color-rock: #8e8080;
+  --type-color-ghost: #5d488e;
+  --type-color-dragon: #21307e;
+  --type-color-steel: #899ba8;
+  --type-color-ice: #c2e9fb;
+  --type-color-dark: #2c2c2c;
+  --type-color-flying: #392b58;
+}
+
+.modal-content.modal-bg-fire {
+  background: linear-gradient(135deg, var(--type-color-fire) 0%, #feb47b 100%);
+}
+.modal-content.modal-bg-water {
+  background: linear-gradient(135deg, var(--type-color-water) 0%, #2193b0 100%);
+}
+.modal-content.modal-bg-grass {
+  background: linear-gradient(135deg, var(--type-color-grass) 0%, #56ab2f 100%);
+}
+.modal-content.modal-bg-electric {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-electric) 0%,
+    #f6d200 100%
+  );
+}
+.modal-content.modal-bg-bug {
+  background: linear-gradient(135deg, var(--type-color-bug) 0%, #6e8e16 100%);
+}
+.modal-content.modal-bg-normal {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-normal) 0%,
+    #c4c3b5 100%
+  );
+}
+.modal-content.modal-bg-poison {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-poison) 0%,
+    #6e48aa 100%
+  );
+}
+.modal-content.modal-bg-fairy {
+  background: linear-gradient(135deg, var(--type-color-fairy) 0%, #a6c1ee 100%);
+}
+.modal-content.modal-bg-ground {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-ground) 0%,
+    #b38e5d 100%
+  );
+}
+.modal-content.modal-bg-fighting {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-fighting) 0%,
+    #8b6e5e 100%
+  );
+}
+.modal-content.modal-bg-psychic {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-psychic) 0%,
+    #e25050 100%
+  );
+}
+.modal-content.modal-bg-rock {
+  background: linear-gradient(135deg, var(--type-color-rock) 0%, #8e8080 100%);
+}
+.modal-content.modal-bg-ghost {
+  background: linear-gradient(135deg, var(--type-color-ghost) 0%, #5d488e 100%);
+}
+.modal-content.modal-bg-dragon {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-dragon) 0%,
+    #21307e 100%
+  );
+}
+.modal-content.modal-bg-steel {
+  background: linear-gradient(135deg, var(--type-color-steel) 0%, #899ba8 100%);
+}
+.modal-content.modal-bg-ice {
+  background: linear-gradient(135deg, var(--type-color-ice) 0%, #c2e9fb 100%);
+}
+.modal-content.modal-bg-dark {
+  background: linear-gradient(135deg, var(--type-color-dark) 0%, #2c2c2c 100%);
+}
+.modal-content.modal-bg-flying {
+  background: linear-gradient(
+    135deg,
+    var(--type-color-flying) 0%,
+    #392b58 100%
+  );
 }
